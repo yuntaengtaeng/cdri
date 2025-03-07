@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Color from './color';
 
 const Title1 = styled.h1<{ color?: string }>`
@@ -55,12 +55,16 @@ const Body2Bold = styled.p<{ color?: string }>`
   color: ${(props) => props.color || Color.Text.primary};
 `;
 
-const Cation = styled.p<{ color?: string }>`
+export const CaptionStyle = css`
   font-family: 'Noto Sans KR', sans-serif;
   font-weight: 500;
   font-size: 16px;
   line-height: 16px;
   letter-spacing: 0%;
+`;
+
+const Cation = styled.p<{ color?: string }>`
+  ${CaptionStyle};
   color: ${(props) => props.color || Color.Text.primary};
 `;
 
