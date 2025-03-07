@@ -14,12 +14,12 @@ const S = {
     align-items: center;
   `,
 
-  MenuItem: styled(Link)<{ isActive: boolean }>`
+  MenuItem: styled(Link)<{ $isActive: boolean }>`
     text-decoration: none;
     padding-bottom: 4px;
     border-bottom: 1px solid
       ${(props) =>
-        props.isActive ? Color.Palette.primary : Color.Palette.white};
+        props.$isActive ? Color.Palette.primary : Color.Palette.white};
   `,
 
   CenterElement: styled.div`
@@ -45,7 +45,7 @@ const Header = () => {
           <S.MenuItem
             key={item.to}
             to={item.to}
-            isActive={location.pathname === item.to}
+            $isActive={location.pathname === item.to}
           >
             <Typo.Body1>{item.label}</Typo.Body1>
           </S.MenuItem>
