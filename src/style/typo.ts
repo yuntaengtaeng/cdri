@@ -1,6 +1,15 @@
 import styled, { css } from 'styled-components';
 import Color from './color';
 
+const H3Bold = styled.h1<{ color?: string }>`
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: 0%;
+  color: ${(props) => props.color || Color.Text.primary};
+`;
+
 const Title1 = styled.h1<{ color?: string }>`
   font-family: 'Noto Sans KR', sans-serif;
   font-weight: 700;
@@ -68,6 +77,15 @@ const Cation = styled.p<{ color?: string }>`
   color: ${(props) => props.color || Color.Text.primary};
 `;
 
+const CationMedium = styled.p<{ color?: string }>`
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: 0%;
+  color: ${(props) => props.color || Color.Text.primary};
+`;
+
 const Small = styled.p<{ color?: string }>`
   font-family: 'Noto Sans KR', sans-serif;
   font-weight: 500;
@@ -77,6 +95,27 @@ const Small = styled.p<{ color?: string }>`
   color: ${(props) => props.color || Color.Text.primary};
 `;
 
-const Typo = { Title1, Title2, Title3, Body1, Body2, Body2Bold, Cation, Small };
+const TinyMedium = styled.p<{ color?: string }>`
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 22px;
+  letter-spacing: 0%;
+  color: ${(props) => props.color || Color.Text.primary};
+`;
+
+const Typo = {
+  H3Bold,
+  Title1,
+  Title2,
+  Title3,
+  Body1,
+  Body2,
+  Body2Bold,
+  Cation,
+  CationMedium,
+  Small,
+  TinyMedium,
+};
 
 export default Typo;
