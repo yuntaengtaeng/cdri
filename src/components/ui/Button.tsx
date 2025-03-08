@@ -5,7 +5,7 @@ import Utils from '../../style/utils';
 
 type ButtonProps = {
   width: number;
-  backgroundColor: string;
+  backgroundcolor: string;
 };
 
 const S = {
@@ -15,7 +15,7 @@ const S = {
     height: 48px;
     border-radius: 8px;
     padding: 13px 20px;
-    background-color: ${(props) => props.backgroundColor};
+    background-color: ${(props) => props.backgroundcolor};
     border: none;
     cursor: pointer;
 
@@ -31,7 +31,7 @@ const S = {
 type Props = {
   label: string;
   onClick?: () => void;
-  width: 115 | 240; // NOTE : 현재는 사용하는 범위가 2 종류여서 이렇게 지정 추후 변경 필요
+  width: 115 | 240 | 312; // NOTE : 현재는 사용하는 범위가 3 종류여서 이렇게 지정 추후 변경 필요 (number를 자유롭게 받는 방법도 고려)
   theme: 'primary' | 'lightgray';
   rightIcon?: React.ReactElement;
 };
@@ -55,7 +55,7 @@ const Button = ({ label, onClick, width, theme, rightIcon }: Props) => {
   return (
     <S.Container
       width={width}
-      backgroundColor={backgroundColor}
+      backgroundcolor={backgroundColor}
       onClick={onClick}
     >
       <Typo.Cation color={color}>{label}</Typo.Cation>
