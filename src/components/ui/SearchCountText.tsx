@@ -4,7 +4,8 @@ import Utils from '../../style/utils';
 
 const S = {
   Container: styled.div`
-    ${Utils.flexCenter};
+    display: flex;
+    align-items: center;
     gap: 16px;
   `,
   Right: styled.div`
