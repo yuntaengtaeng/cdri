@@ -6,14 +6,16 @@ import Color from '../../style/color';
 import Utils from '../../style/utils';
 import Typo, { CaptionStyle } from '../../style/typo';
 import { useState } from 'react';
+import useOutsideClick from '../../hooks/useOutsideClick';
 
 const S = {
-  Container: styled.div<{ isFocused: boolean }>`
+  Container: styled.div<{ $isFocused: boolean }>`
     padding: 10px;
     background-color: ${Color.Palette.lightgrey};
-    border-radius: ${(props) => (props.isFocused ? '24px' : '100px')};
+    border-radius: ${(props) => (props.$isFocused ? '24px 24px 0 0' : '100px')};
     ${Utils.flexCenter};
     flex-direction: column;
+    position: relative;
   `,
   InputContainer: styled.div`
     ${Utils.flexCenter};
@@ -35,8 +37,16 @@ const S = {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    margin-top: 28px;
-    margin-bottom: 28px;
+    padding-top: 28px;
+    padding-bottom: 28px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    background-color: ${Color.Palette.lightgrey};
+    border-bottom-left-radius: 24px;
+    border-bottom-right-radius: 24px;
   `,
   Item: styled.div`
     display: flex;
@@ -49,16 +59,43 @@ type Props = {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
   placeholder?: string;
+  onEnterKeyDown?: () => void;
+  onHistoryHandler?: (keyword: string) => void;
 };
 
 // TODO : 로컬스토리지를 이용해 검색 히스토리를 제공하는 기능 추가 필요 (최대 8개)
 
-const Textfield = ({ onChange, value, placeholder }: Props) => {
+const Textfield = ({
+  onChange,
+  value,
+  placeholder,
+  onEnterKeyDown,
+  onHistoryHandler,
+}: Props) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [history, setHistory] = useState<string[]>([]);
+  const [history, setHistory] = useState<string[]>(
+    JSON.parse(localStorage.getItem('searchHistory') || '[]')
+  );
+
+  const ref = useOutsideClick(() => {
+    setIsFocused(false);
+  });
+
+  const updateHistory = (keyword: string) => {
+    if (!keyword.trim() || history.includes(keyword)) return;
+    const newHistory = [keyword, ...history].slice(0, 8);
+    setHistory(newHistory);
+    localStorage.setItem('searchHistory', JSON.stringify(newHistory));
+  };
+
+  const deleteHistoryItem = (keyword: string) => {
+    const newHistory = history.filter((item) => item !== keyword);
+    setHistory(newHistory);
+    localStorage.setItem('searchHistory', JSON.stringify(newHistory));
+  };
 
   return (
-    <S.Container isFocused={isFocused}>
+    <S.Container $isFocused={isFocused} ref={ref}>
       <S.InputContainer>
         <Search />
         <S.Input
@@ -66,11 +103,17 @@ const Textfield = ({ onChange, value, placeholder }: Props) => {
           value={value}
           placeholder={placeholder}
           type="text"
-          onFocus={() => {
+          onClick={() => {
             setIsFocused(true);
           }}
-          onBlur={() => {
-            setIsFocused(false);
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && onEnterKeyDown) {
+              onEnterKeyDown();
+
+              if (value) {
+                updateHistory(value);
+              }
+            }
           }}
         />
       </S.InputContainer>
@@ -79,9 +122,22 @@ const Textfield = ({ onChange, value, placeholder }: Props) => {
           {history.length ? (
             <>
               {history.map((h) => (
-                <S.Item>
+                <S.Item
+                  key={h}
+                  onClick={() => {
+                    if (onHistoryHandler) {
+                      onHistoryHandler(h);
+                      setIsFocused(false);
+                    }
+                  }}
+                >
                   <Typo.Cation color={Color.Text.subtitle}>{h}</Typo.Cation>
-                  <span>
+                  <span
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      deleteHistoryItem(h);
+                    }}
+                  >
                     <Close />
                   </span>
                 </S.Item>
